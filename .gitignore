@@ -1,0 +1,11 @@
+composer.phar
+composer.lock
+phpunit.xml
+phpunit.php
+.phpunit.result.cache
+vendor/
+public/
+resources/docker/
+nbproject/
+.env
+tests/unit/cache_data/

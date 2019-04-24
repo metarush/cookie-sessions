@@ -1,0 +1,32 @@
+{
+    "name": "metarush/cookie-sessions",
+    "type": "library",
+    "description": "Storageless sessions using encrypted cookies as session handler",
+    "keywords": [
+        "php",
+        "sessions",
+        "cookies",
+        "session handler",
+        "encrypted cookies",
+        "storageless sessions"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "metarush/cookie-sessions contributors",
+            "homepage": "https://github.com/metarush/cookie-sessions/graphs/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MetaRush\\CookieSessions\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "defuse/php-encryption": "^2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
