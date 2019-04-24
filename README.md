@@ -33,7 +33,7 @@ Note: Don't set `expires` option, this library will use the `session.gc_maxlifet
 
 ```php
 $secretKey = 'replace this with the generated key';
-$cookiePrefix = 'your_identifier'; // optional cookie prefix, keep it short, alphanumeric
+$cookiePrefix = 'your_identifier'; // optional cookie prefix, keep it short, alphanumeric with _ suffix (e.g., XYZ_)
 $handler = new \MetaRush\CookieSessions\Handler($secretKey, $options, $cookiePrefix);
 session_set_save_handler($handler, true);
 session_start();
