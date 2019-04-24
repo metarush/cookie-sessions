@@ -66,8 +66,11 @@ class Handler implements \SessionHandlerInterface
 
     public function destroy($sid)
     {
-        if (isset($_COOKIE[$this->cookiePrefix . $sid]))
-            setcookie($this->cookiePrefix . $sid, '', -1);
+        foreach ($_COOKIE as $k => $v)
+            if (0 === strpos($k, $this->cookiePrefix)) {
+                $path = $this->options['path'] ?? '';
+                setcookie($k, '', -1, $path);
+            }
 
         return true;
     }
