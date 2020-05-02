@@ -22,7 +22,7 @@ class Handler implements \SessionHandlerInterface
     public function __construct(string $key, ?array $options = [], $cookiePrefix = 'MRCS_')
     {
         // overide 'expires' option so that we use the ini directive
-        $options['expires'] = time() + ini_get('session.gc_maxlifetime');
+        $options['expires'] = \time() + \ini_get('session.gc_maxlifetime');
 
         $this->key = $key;
         $this->options = $options;
@@ -31,7 +31,7 @@ class Handler implements \SessionHandlerInterface
 
     public function open($savePath, $sessionName)
     {
-        ob_start();
+        \ob_start();
         return true;
     }
 
@@ -56,10 +56,10 @@ class Handler implements \SessionHandlerInterface
         $keyObject = Crypto\Key::loadFromAsciiSafeString($this->key);
         $encrypted = Crypto\Crypto::encrypt($value, $keyObject);
 
-        if (strlen($encrypted) >= self::MAX_COOKIE_LENGTH)
-            throw Exception('Cookie length >= ' . self::MAX_COOKIE_LENGTH . ' , reduce your session variables');
+        if (\strlen($encrypted) >= self::MAX_COOKIE_LENGTH)
+            throw new Exception('Cookie length >= ' . self::MAX_COOKIE_LENGTH . ' , reduce your session variables');
 
-        setcookie($this->cookiePrefix . $sid, $encrypted, $this->options);
+        \setcookie($this->cookiePrefix . $sid, $encrypted, $this->options);
 
         return true;
     }
@@ -67,9 +67,9 @@ class Handler implements \SessionHandlerInterface
     public function destroy($sid)
     {
         foreach ($_COOKIE as $k => $v)
-            if (0 === strpos($k, $this->cookiePrefix)) {
+            if (0 === \strpos($k, $this->cookiePrefix)) {
                 $path = $this->options['path'] ?? '';
-                setcookie($k, '', -1, $path);
+                \setcookie($k, '', -1, $path);
             }
 
         return true;
