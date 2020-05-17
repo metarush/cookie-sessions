@@ -9,6 +9,7 @@ use Defuse\Crypto;
 class Handler implements \SessionHandlerInterface
 {
     const MAX_COOKIE_LENGTH = 4000;
+
     private $key;
     private $options;
     private $cookiePrefix;
@@ -56,8 +57,10 @@ class Handler implements \SessionHandlerInterface
         $keyObject = Crypto\Key::loadFromAsciiSafeString($this->key);
         $encrypted = Crypto\Crypto::encrypt($value, $keyObject);
 
-        if (\strlen($encrypted) >= self::MAX_COOKIE_LENGTH)
-            throw new Exception('Cookie length >= ' . self::MAX_COOKIE_LENGTH . ' , reduce your session variables');
+        if (\strlen($encrypted) >= self::MAX_COOKIE_LENGTH) {
+            \trigger_error('Cookie length (' . \strlen($encrypted) . ') >= ' . self::MAX_COOKIE_LENGTH . ', reduce your session variables', E_USER_WARNING);
+            return false;
+        }
 
         \setcookie($this->cookiePrefix . $sid, $encrypted, $this->options);
 
@@ -79,4 +82,5 @@ class Handler implements \SessionHandlerInterface
     {
         return true;
     }
+
 }

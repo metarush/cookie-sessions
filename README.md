@@ -50,7 +50,7 @@ $_SESSIONS['foo'] = 'bar';
 - This library uses `defuse/php-encryption` for encrypting session data in cookies
 - Keep the `$secretKey` hidden from public
 - Browsers generally have 4,000 bytes total cookie limit per domain
-- An Exception `\MetaRush\CookieSession\Exception` will be thrown if the 4,000-character limit is reached
-- The Exception limit counts data in encrypted form (roughly 1,900 of unencrypted data)
-- The Exception limit doesn't account for other scripts using cookies on the same domain
+- An E_USER_WARNING will be thrown if you're trying to set a session variable that is equivalent to >= 4,000 bytes (in encrypted form)
+- The limit counts data in encrypted form which is equivalent to roughly 1,900 of unencrypted data
+- The limit doesn't account for other session data already written or scripts using cookies on the same domain
 - Minimize session/cookie variables per domain to give way to other scripts if applicable
