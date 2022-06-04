@@ -10,38 +10,33 @@ class Handler implements \SessionHandlerInterface
 {
     const MAX_COOKIE_LENGTH = 4000;
 
-    private $key;
-    private $options;
-    private $cookiePrefix;
-
     /**
      *
      * @param string $key Encryption key generated from vendor/bin/generate-defuse-key
-     * @param array $options See "options" paramater in \setcookie()
-     * @param type $cookiePrefix Cookie prefix
+     * @param array<mixed> $options See "options" paramater in \setcookie()
+     * @param string $cookiePrefix Cookie prefix
      */
-    public function __construct(string $key, ?array $options = [], $cookiePrefix = 'MRCS_')
+    public function __construct(
+        private string $key,
+        private array $options = [],
+        private $cookiePrefix = 'MRCS_')
     {
         // overide 'expires' option so that we use the ini directive
         $options['expires'] = \time() + \ini_get('session.gc_maxlifetime');
-
-        $this->key = $key;
-        $this->options = $options;
-        $this->cookiePrefix = $cookiePrefix;
     }
 
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         \ob_start();
         return true;
     }
 
-    public function close()
+    public function close(): bool
     {
         return true;
     }
 
-    public function read($sid)
+    public function read($sid): string|false
     {
         if (!isset($_COOKIE[$this->cookiePrefix . $sid]))
             return '';
@@ -52,7 +47,7 @@ class Handler implements \SessionHandlerInterface
         return $decrypted;
     }
 
-    public function write($sid, $value)
+    public function write($sid, $value): bool
     {
         $keyObject = Crypto\Key::loadFromAsciiSafeString($this->key);
         $encrypted = Crypto\Crypto::encrypt($value, $keyObject);
@@ -62,25 +57,30 @@ class Handler implements \SessionHandlerInterface
             return false;
         }
 
-        \setcookie($this->cookiePrefix . $sid, $encrypted, $this->options);
+        \setcookie($this->cookiePrefix . $sid, $encrypted, $this->options); // @phpstan-ignore-line
 
         return true;
     }
 
-    public function destroy($sid)
+    public function destroy($sid): bool
     {
         foreach ($_COOKIE as $k => $v)
             if (0 === \strpos($k, $this->cookiePrefix)) {
-                $path = $this->options['path'] ?? '';
+
+                $path = '';
+                if (\is_string($this->options['path']))
+                    $path = $this->options['path'];
+
                 \setcookie($k, '', -1, $path);
             }
 
         return true;
     }
 
-    public function gc($maxLifetime)
+    // garbage collection is done by the user's browser so this is not really needed
+    public function gc($maxLifetime): int|false
     {
-        return true;
+        return 1;
     }
 
 }

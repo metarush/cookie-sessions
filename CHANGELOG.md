@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.0 - 2022-06-04
+
+### Changed
+
+- Require PHP 8.1.
+
 ## 2.0.0 - 2020-05-17
 
 ### Changed
