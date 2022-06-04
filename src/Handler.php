@@ -21,8 +21,9 @@ class Handler implements \SessionHandlerInterface
         private array $options = [],
         private $cookiePrefix = 'MRCS_')
     {
-        // overide 'expires' option so that we use the ini directive
-        $options['expires'] = \time() + \ini_get('session.gc_maxlifetime');
+        // use ini directive if 'expires' is not set
+        if (!isset($options['expires']))
+            $options['expires'] = \time() + \ini_get('session.gc_maxlifetime');
     }
 
     public function open($savePath, $sessionName): bool
@@ -68,7 +69,7 @@ class Handler implements \SessionHandlerInterface
             if (0 === \strpos($k, $this->cookiePrefix)) {
 
                 $path = '';
-                if (\is_string($this->options['path']))
+                if (isset($this->options['path']) && \is_string($this->options['path']))
                     $path = $this->options['path'];
 
                 \setcookie($k, '', -1, $path);

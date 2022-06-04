@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 3.1.0 - 2022-06-05
+
+### Added
+
+- Allow setting of "expires" in \setcookie(); instead of defaulting to session.gc_maxlifetime.
+
+### Fixed
+
+- Fix "path" issue in Handler::destroy().
+
 ## 3.0.0 - 2022-06-04
 
 ### Changed
